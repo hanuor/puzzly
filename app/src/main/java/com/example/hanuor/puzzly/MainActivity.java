@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hanuor.puzzly.Constants.CommonGlobalVariables;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://api.stackexchange.com/2.2/questions?site=puzzling&filter=withbody";
+        String page = "page=2";
+        String url = CommonGlobalVariables.API_MAIN_URL + page + CommonGlobalVariables.API_END_URL;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
