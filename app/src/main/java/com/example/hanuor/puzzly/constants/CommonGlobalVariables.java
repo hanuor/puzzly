@@ -1,4 +1,4 @@
-package com.example.hanuor.puzzly.Constants;
+package com.example.hanuor.puzzly.constants;
 
 public class CommonGlobalVariables{
     public static String API_MAIN_URL = "http://api.stackexchange.com/2.2/questions?";

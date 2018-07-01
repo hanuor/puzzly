@@ -1,6 +1,8 @@
 package com.example.hanuor.puzzly;
 
 import android.annotation.TargetApi;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,12 +17,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.hanuor.puzzly.Constants.CommonGlobalVariables;
-import com.example.hanuor.puzzly.Constants.Logger;
+import com.example.hanuor.puzzly.constants.CommonGlobalVariables;
+import com.example.hanuor.puzzly.constants.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,12 +34,24 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.puzzledata)
     TextView puzzleData;
 
+    @BindView(R.id.puzzletitle)
+    TextView puzzleTitle;
+
+    Typeface typeface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-get_data(1);
+
+        AssetManager am = this.getApplicationContext().getAssets();
+
+        typeface = Typeface.createFromAsset(am,
+                String.format(Locale.US, "fonts/%s", "RWT.ttf"));
+
+        puzzleTitle.setTypeface(typeface);
+        get_data(1);
     }
 
 
@@ -77,6 +93,7 @@ get_data(1);
             for (int i=0; i<jsonArray.length(); i++) {
                 JSONObject itemObject = jsonArray.getJSONObject(i);
                 puzzleData.setText(Html.fromHtml(itemObject.getString("body"), Html.FROM_HTML_MODE_LEGACY));
+                puzzleData.setTypeface(typeface);
             }
         } catch (JSONException e) {
             e.printStackTrace();
