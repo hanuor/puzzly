@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     TextView puzzleTitle;
 
     Typeface typeface;
+    HashMap<Integer, String> storeRiddlePuzzles;
+    int currentPageCount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +49,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        storeRiddlePuzzles = new HashMap<Integer, String>();
+
         AssetManager am = this.getApplicationContext().getAssets();
 
         typeface = Typeface.createFromAsset(am,
-                String.format(Locale.US, "fonts/%s", "RWT.ttf"));
+                String.format(Locale.US, "fonts/%s", "Parchment.ttf"));
 
         puzzleTitle.setTypeface(typeface);
-        get_data(1);
+        get_data(currentPageCount);
+
     }
 
 
@@ -91,9 +98,21 @@ public class MainActivity extends AppCompatActivity {
             Log.e(CommonGlobalVariables.ERROR_LOG, String.valueOf(jsonArray.length()));
 
             for (int i=0; i<jsonArray.length(); i++) {
+                Boolean isRiddle = false;
                 JSONObject itemObject = jsonArray.getJSONObject(i);
-                puzzleData.setText(Html.fromHtml(itemObject.getString("body"), Html.FROM_HTML_MODE_LEGACY));
-                puzzleData.setTypeface(typeface);
+                JSONArray tagsArray = itemObject.getJSONArray("tags");
+                if (tagsArray.length() < 2 && tagsArray.get(0).toString().equalsIgnoreCase("riddle")) {
+                    isRiddle = true;
+                } else {
+                    for (int j=0; j<tagsArray.length(); j++) {
+                        if (tagsArray.get(j).toString().equalsIgnoreCase("riddle")) {
+                            isRiddle = true;
+                        }
+                    }
+                }
+                if (isRiddle) {
+                    storeRiddlePuzzles.put(itemObject.getInt("question_id"), itemObject.getString("body"));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
