@@ -9,6 +9,8 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,7 +28,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,8 +44,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.puzzletitle)
     TextView puzzleTitle;
 
+    @BindView(R.id.nextpuzzle)
+    Button nextPuzzle;
+
     Typeface typeface;
-    HashMap<Integer, String> storeRiddlePuzzles;
+    LinkedHashMap<Integer, String> storeRiddlePuzzles;
     int currentPageCount = 1;
 
     @Override
@@ -49,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        storeRiddlePuzzles = new HashMap<Integer, String>();
+        storeRiddlePuzzles = new LinkedHashMap<Integer, String>();
 
         AssetManager am = this.getApplicationContext().getAssets();
 
@@ -57,7 +65,20 @@ public class MainActivity extends AppCompatActivity {
                 String.format(Locale.US, "fonts/%s", "Parchment.ttf"));
 
         puzzleTitle.setTypeface(typeface);
+        puzzleData.setTypeface(typeface);
         get_data(currentPageCount);
+
+        nextPuzzle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Iterator it = storeRiddlePuzzles.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    puzzleData.setText((String) pair.getValue());
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
+            }
+        });
 
     }
 
@@ -114,6 +135,14 @@ public class MainActivity extends AppCompatActivity {
                     storeRiddlePuzzles.put(itemObject.getInt("question_id"), itemObject.getString("body"));
                 }
             }
+
+
+
+            Log.d(CommonGlobalVariables.DEBUG_LOG, storeRiddlePuzzles.size() + "");
+            Map.Entry<Integer,String> entry = storeRiddlePuzzles.entrySet().iterator().next();
+            int key= entry.getKey();
+            String value=entry.getValue();
+            puzzleData.setText(Html.fromHtml(value));
         } catch (JSONException e) {
             e.printStackTrace();
         }
