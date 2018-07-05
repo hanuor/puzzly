@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     Typeface typeface;
     LinkedHashMap<Integer, String> storeRiddlePuzzles;
     int currentPageCount = 1;
+    Iterator its;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +72,17 @@ public class MainActivity extends AppCompatActivity {
         nextPuzzle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Iterator it = storeRiddlePuzzles.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
-                    puzzleData.setText((String) pair.getValue());
-                    it.remove(); // avoids a ConcurrentModificationException
+//                its = storeRiddlePuzzles.entrySet().iterator();
+//                while (its.hasNext()) {
+//                    Log.d(CommonGlobalVariables.VERBOSE_LOG, "" + pair.getValue());
+//                    Log.d(CommonGlobalVariables.VERBOSE_LOG, "#####################");
+//                }
+
+
+
+                if (its.hasNext()) {
+                    Map.Entry pair = (Map.Entry)its.next();
+                    puzzleData.setText(Html.fromHtml(pair.getValue().toString()));
                 }
             }
         });
@@ -139,9 +146,12 @@ public class MainActivity extends AppCompatActivity {
 
 
             Log.d(CommonGlobalVariables.DEBUG_LOG, storeRiddlePuzzles.size() + "");
-            Map.Entry<Integer,String> entry = storeRiddlePuzzles.entrySet().iterator().next();
-            int key= entry.getKey();
-            String value=entry.getValue();
+            its = storeRiddlePuzzles.entrySet().iterator();
+
+            Map.Entry pair = (Map.Entry)its.next();
+
+            int key= (int) pair.getKey();
+            String value= (String) pair.getValue();
             puzzleData.setText(Html.fromHtml(value));
         } catch (JSONException e) {
             e.printStackTrace();
