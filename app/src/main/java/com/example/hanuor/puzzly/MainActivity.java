@@ -1,6 +1,7 @@
 package com.example.hanuor.puzzly;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hanuor.puzzly.constants.CommonGlobalVariables;
 import com.example.hanuor.puzzly.constants.Logger;
+import com.example.hanuor.puzzly.utils.ProgressDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     LinkedHashMap<Integer, String> storeRiddlePuzzles;
     int currentPageCount = 1;
     Iterator its;
+    Dialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +61,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+
         storeRiddlePuzzles = new LinkedHashMap<Integer, String>();
 
         AssetManager am = this.getApplicationContext().getAssets();
 
         typeface = Typeface.createFromAsset(am,
                 String.format(Locale.US, "fonts/%s", "Parchment.ttf"));
+        progressDialog = ProgressDialog.progressDialog(MainActivity.this);
 
         puzzleTitle.setTypeface(typeface);
         puzzleData.setTypeface(typeface);
@@ -79,10 +84,14 @@ public class MainActivity extends AppCompatActivity {
 //                }
 
 
-
                 if (its.hasNext()) {
-                    Map.Entry pair = (Map.Entry)its.next();
+                    Map.Entry pair = (Map.Entry) its.next();
                     puzzleData.setText(Html.fromHtml(pair.getValue().toString()));
+                } else {
+                    Log.d(CommonGlobalVariables.DEBUG_LOG, currentPageCount + " Page");
+                    progressDialog.show();
+                    currentPageCount ++;
+                    get_data(currentPageCount);
                 }
             }
         });
@@ -91,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void get_data(int pageNumber) {
+        Log.d(CommonGlobalVariables.VERBOSE_LOG, pageNumber + " This is the number");
+        storeRiddlePuzzles.clear();
         RequestQueue queue = Volley.newRequestQueue(this);
         String page = "page=" + pageNumber;
         String url = CommonGlobalVariables.API_MAIN_URL + page + CommonGlobalVariables.API_END_URL + CommonGlobalVariables.API_WITH_BODY_URL;
@@ -110,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(CommonGlobalVariables.ERROR_LOG, error.getMessage());
             }
         });
-
+        progressDialog.dismiss();
         queue.add(stringRequest);
     }
 
@@ -125,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray(jsonObject.getString("items"));
             Log.e(CommonGlobalVariables.ERROR_LOG, String.valueOf(jsonArray.length()));
 
-            for (int i=0; i<jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 Boolean isRiddle = false;
                 JSONObject itemObject = jsonArray.getJSONObject(i);
                 JSONArray tagsArray = itemObject.getJSONArray("tags");
                 if (tagsArray.length() < 2 && tagsArray.get(0).toString().equalsIgnoreCase("riddle")) {
                     isRiddle = true;
                 } else {
-                    for (int j=0; j<tagsArray.length(); j++) {
+                    for (int j = 0; j < tagsArray.length(); j++) {
                         if (tagsArray.get(j).toString().equalsIgnoreCase("riddle")) {
                             isRiddle = true;
                         }
@@ -144,14 +155,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
             Log.d(CommonGlobalVariables.DEBUG_LOG, storeRiddlePuzzles.size() + "");
             its = storeRiddlePuzzles.entrySet().iterator();
 
-            Map.Entry pair = (Map.Entry)its.next();
+            Map.Entry pair = (Map.Entry) its.next();
 
-            int key= (int) pair.getKey();
-            String value= (String) pair.getValue();
+            int key = (int) pair.getKey();
+            String value = (String) pair.getValue();
             puzzleData.setText(Html.fromHtml(value));
         } catch (JSONException e) {
             e.printStackTrace();
