@@ -7,6 +7,7 @@ public class CommonGlobalVariables{
     public static String DEBUG_LOG = "debugpuzzly";
     public static String ERROR_LOG = "errorpuzzly";
     public static String VERBOSE_LOG = "verbosepuzzly";
+    public static String ABOUT_APP_URL = "https://gist.githubusercontent.com/hanuor/c9b35be595e3208dc4cbbd34364cd128/raw/1497da173366a9b23429945d9683550f44a6caa9/Pz.txt";
 
 
 }

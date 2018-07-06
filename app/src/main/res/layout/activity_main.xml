@@ -4,52 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<include layout="@layout/toolbar"/>
-
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/puzzletitle"
-        android:textColor="@color/black"
-        android:layout_gravity="center"
-        android:layout_margin="13dp"
-        android:text="Puzzle"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:textSize="23sp"/>
 
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:id="@+id/scrollview"
-        android:layout_margin="13dp"
-        android:layout_below="@+id/puzzletitle"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:id="@+id/detailscontainer"
+        android:background="#fff">
 
-        <TextView
-            android:id="@+id/puzzledata"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/headercontainer"
+            android:layout_margin="13dp">
+
+            <TextView
+                android:id="@+id/puzzletitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="Puzzly"
+                android:clickable="true"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="32sp" />
+
+        </RelativeLayout>
+
+
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headercontainer"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="13dp">
+
+            <TextView
+                android:id="@+id/puzzledata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="17dp"
+                android:gravity="center"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/nextpuzzle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="17dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="23sp" />
-    </ScrollView>
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="7dp"
+            android:gravity="bottom"
+            android:text="Next Puzzle"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/nextpuzzle"
-        android:gravity="bottom"
-        android:layout_margin="3dp"
-        android:layout_alignParentBottom="true"
-        android:text="Next Puzzle" />
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/aboutcontainer"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="23sp"
+            android:id="@+id/aboutapptext"
+            android:text="asdasdas"
+            android:gravity="center"
+            android:layout_margin="7dp"/>
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

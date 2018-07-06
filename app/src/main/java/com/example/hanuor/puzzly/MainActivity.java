@@ -10,8 +10,13 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -49,11 +54,27 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.nextpuzzle)
     Button nextPuzzle;
 
+    @BindView(R.id.aboutcontainer)
+    RelativeLayout aboutContainer;
+
+    @BindView(R.id.detailscontainer)
+    RelativeLayout detailsContainer;
+
+    @BindView(R.id.aboutapptext)
+    TextView aboutAppText;
+
+    @BindView(R.id.scrollview)
+    ScrollView headerContainer;
+
+
     Typeface typeface;
     LinkedHashMap<Integer, String> storeRiddlePuzzles;
     int currentPageCount = 1;
     Iterator its;
     Dialog progressDialog;
+    String aboutAppTextPuzzly;
+
+    Boolean showAboutApp = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-
+        showPage(showAboutApp);
         storeRiddlePuzzles = new LinkedHashMap<Integer, String>();
 
         AssetManager am = this.getApplicationContext().getAssets();
@@ -72,17 +93,13 @@ public class MainActivity extends AppCompatActivity {
 
         puzzleTitle.setTypeface(typeface);
         puzzleData.setTypeface(typeface);
+        nextPuzzle.setTypeface(typeface);
+        aboutAppText.setTypeface(typeface);
         get_data(currentPageCount);
 
         nextPuzzle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                its = storeRiddlePuzzles.entrySet().iterator();
-//                while (its.hasNext()) {
-//                    Log.d(CommonGlobalVariables.VERBOSE_LOG, "" + pair.getValue());
-//                    Log.d(CommonGlobalVariables.VERBOSE_LOG, "#####################");
-//                }
-
 
                 if (its.hasNext()) {
                     Map.Entry pair = (Map.Entry) its.next();
@@ -90,14 +107,19 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.d(CommonGlobalVariables.DEBUG_LOG, currentPageCount + " Page");
                     progressDialog.show();
-                    currentPageCount ++;
+                    currentPageCount++;
                     get_data(currentPageCount);
                 }
             }
         });
+        puzzleTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPage(showAboutApp);
+            }
+        });
 
     }
-
 
     public void get_data(int pageNumber) {
         Log.d(CommonGlobalVariables.VERBOSE_LOG, pageNumber + " This is the number");
@@ -121,8 +143,28 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(CommonGlobalVariables.ERROR_LOG, error.getMessage());
             }
         });
-        progressDialog.dismiss();
         queue.add(stringRequest);
+
+        String aboutUrl = CommonGlobalVariables.ABOUT_APP_URL;
+
+        StringRequest aboutStringRequest = new StringRequest(Request.Method.GET, aboutUrl,
+                new Response.Listener<String>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onResponse(String response) {
+                        aboutAppTextPuzzly = response;
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(CommonGlobalVariables.ERROR_LOG, error.getMessage());
+            }
+        });
+        progressDialog.dismiss();
+        queue.add(aboutStringRequest);
+
+
+
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -168,4 +210,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public void showPage(Boolean showAbout) {
+        if (showAbout) {
+            headerContainer.setVisibility(View.GONE);
+            aboutContainer.setVisibility(View.VISIBLE);
+            aboutAppText.setText(aboutAppTextPuzzly);
+            showAboutApp = false;
+        } else {
+            headerContainer.setVisibility(View.VISIBLE);
+            aboutContainer.setVisibility(View.GONE);
+            showAboutApp = true;
+        }
+    }
+
 }
