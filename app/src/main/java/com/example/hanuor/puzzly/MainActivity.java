@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         nextPuzzle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showPage(showAboutApp);
                 if (its.hasNext()) {
                     Map.Entry pair = (Map.Entry) its.next();
                     puzzleData.setText(Html.fromHtml(pair.getValue().toString()));
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         puzzleTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         if (showAbout) {
             headerContainer.setVisibility(View.GONE);
             aboutContainer.setVisibility(View.VISIBLE);
-            aboutAppText.setText(aboutAppTextPuzzly);
+            aboutAppText.setText(Html.fromHtml(aboutAppTextPuzzly));
             showAboutApp = false;
         } else {
             headerContainer.setVisibility(View.VISIBLE);
