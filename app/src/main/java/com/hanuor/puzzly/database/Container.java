@@ -1,4 +1,4 @@
-package com.example.hanuor.puzzly.database;
+package com.hanuor.puzzly.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

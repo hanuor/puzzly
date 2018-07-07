@@ -1,4 +1,4 @@
-package com.example.hanuor.puzzly.constants;
+package com.hanuor.puzzly.constants;
 
 public class Logger {
     public static void d(String TAG, String message) {

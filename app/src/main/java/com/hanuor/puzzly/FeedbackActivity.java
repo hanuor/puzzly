@@ -1,4 +1,4 @@
-package com.example.hanuor.puzzly;
+package com.hanuor.puzzly;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

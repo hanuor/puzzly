@@ -1,4 +1,4 @@
-package com.example.hanuor.puzzly;
+package com.hanuor.puzzly;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -25,9 +26,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.hanuor.puzzly.constants.CommonGlobalVariables;
-import com.example.hanuor.puzzly.constants.Logger;
-import com.example.hanuor.puzzly.utils.ProgressDialog;
+import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.hanuor.puzzly.constants.CommonGlobalVariables;
+import com.hanuor.puzzly.constants.Logger;
+import com.hanuor.puzzly.utils.ProgressDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +48,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Fabric.with(this, new Crashlytics());
 
         showPage(showAboutApp);
         storeRiddlePuzzles = new LinkedHashMap<Integer, String>();
@@ -96,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         nextPuzzle.setTypeface(typeface);
         aboutAppText.setTypeface(typeface);
         get_data(currentPageCount);
+
+
+
 
         nextPuzzle.setOnClickListener(new View.OnClickListener() {
             @Override

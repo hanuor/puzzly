@@ -1,4 +1,4 @@
-package com.example.hanuor.puzzly.utils;
+package com.hanuor.puzzly.utils;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.hanuor.puzzly.R;
+import com.hanuor.puzzly.R;
 
 public class ProgressDialog {
 
